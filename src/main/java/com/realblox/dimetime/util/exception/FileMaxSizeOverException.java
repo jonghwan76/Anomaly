@@ -1,0 +1,1 @@
+package com.realblox.dimetime.util.exception;@SuppressWarnings("serial")public class FileMaxSizeOverException extends FileException {	public FileMaxSizeOverException(String fileMaxSizeErrorMsg) {		super(fileMaxSizeErrorMsg);	}	public FileMaxSizeOverException() {		// TODO Auto-generated constructor stub	}}

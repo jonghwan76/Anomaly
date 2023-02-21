@@ -1,0 +1,1 @@
+package com.realblox.dimetime.util.exception;@SuppressWarnings("serial")public class FileDownLoadException extends FileException {	public FileDownLoadException(String fileDownErrorMsg) {		super(fileDownErrorMsg);	}	public FileDownLoadException() {		super();	}	public FileDownLoadException(Exception e) {		super(e);	}}

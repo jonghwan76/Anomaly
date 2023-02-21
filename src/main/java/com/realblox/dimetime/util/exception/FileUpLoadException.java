@@ -1,0 +1,1 @@
+package com.realblox.dimetime.util.exception;@SuppressWarnings("serial")public class FileUpLoadException extends FileException {	public FileUpLoadException(String fileUpErrorMsg) {		super(fileUpErrorMsg);	}	public FileUpLoadException() {		// TODO Auto-generated constructor stub	}}

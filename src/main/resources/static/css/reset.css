@@ -1,0 +1,37 @@
+@charset "utf-8";
+
+/* reset */
+body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,code,form,fieldset,legend,textarea,p,blockquote,th,td,input,select,textarea,button{margin:0;padding:0}
+body,button,input,select,table,textarea{font-family:'NanumSquare', 'MalgunGothic', 'Dotum', 'Gulim', 'Arial','notokr','NotoKR','Noto Sans KR','Malgun Gothic','돋움',dotum,'Apple SD Gothic Neo','Apple SD Gothic Neo',Helvetica,sans-serif;font-size:16px;font-weight:300;color:#363636;line-height:1.4;letter-spacing:0px;}
+html{height:100%}
+body{height:100%;-webkit-text-size-adjust:none}
+button,fieldset,img{border:0 none}
+img,li{vertical-align:top}
+li,ol,ul{list-style:none}
+address,em{font-style:normal}
+a{color:inherit;text-decoration:none}
+a:active,a:focus,a:hover{text-decoration:none}
+button{border:0;background:0 0;cursor:pointer}
+table{margin:0;padding:0;border:0;border-spacing:0}
+input,select,textarea,button{vertical-align:top;}
+input,select,textarea{border:0;background:0;-webkit-appearance:none;-moz-appearance:none;-o-appearance:none;appearance:none;-webkit-border-radius:0;-moz-border-radius:0;-o-border-radius:0;border-radius:0;-webkit-box-shadow:none;-moz-box-shadow:none;-o-box-shadow:none}
+textarea{resize:none;box-shadow:none;-webkit-border-radius:0;-moz-border-radius:0;-o-border-radius:0;border-radius:0;-webkit-box-shadow:none;-moz-box-shadow:none;-o-box-shadow:none}
+embed,iframe,img,object,video{max-width:100%}
+input[type=search]::-ms-clear,input[type=search]::-ms-reveal,input[type=text]::-ms-clear,input[type=text]::-ms-reveal{display:none;width:0;height:0;}
+input[type=search]::-webkit-search-cancel-button{-webkit-appearance:none}
+input[type='text'],input[type='password'],input[type='submit'],input[type='search']{-webkit-appearance:none;border-radius:0;background-color:transparent;}
+button,input[type='button'],input[type='submit'],input[type='reset'],input[type='file']{-webkit-appearance:button;border-radius:0;outline:none}
+.ir_text,legend,.blind{overflow:hidden;position:absolute;border:0;width:1px;height:1px;clip:rect(1px,1px,1px,1px)}
+input:focus{outline:none}
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+select{margin-right:10px;padding:0px 25px 0px 10px;border:1px solid #5b6981;border-radius:5px;background-color:#fff;height:32px;color:#555;background-image:url("../images/arrow_select02.gif");background-repeat:no-repeat;background-position:right .5em top 50%, 0 0;-webkit-appearance: none;}
+input[type="checkbox"]{margin-left:10px;margin-right:10px;padding-left:10px;background-color:#fff;border:1px solid #5b6981;border-radius:5px;appearance:auto}
+input[type="checkbox"]{width:18px;height:18px;margin-right:5px;vertical-align: middle}
+input[type="radio"]{appearance:auto}
+input[type='password']::-webkit-input-placeholder{font-family:'NanumSquare', 'MalgunGothic','Dotum', 'Gulim', 'Arial','notokr','NotoKR','Noto Sans KR','Malgun Gothic','돋움',dotum,'Apple SD Gothic Neo','Apple SD Gothic Neo',Helvetica,sans-serif;}
+input[type='password']{font-family:'Dotum', 'Gulim', 'Arial','notokr','NotoKR','Noto Sans KR','Malgun Gothic','돋움',dotum,'Apple SD Gothic Neo','Apple SD Gothic Neo',Helvetica,sans-serif;}
+.font{font-family:'Nanum Barun Gothic','Dotum', 'Gulim', 'Arial','notokr','NotoKR','Noto Sans KR','돋움',dotum,'Apple SD Gothic Neo','Apple SD Gothic Neo',Helvetica,sans-serif;letter-spacing:0px}

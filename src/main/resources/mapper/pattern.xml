@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.realblox.dimetime.dao.PatternMapper">
+    <!-- 패턴 정보 NFT 목록 조회 -->
+    <select id="getPatternList" parameterType="PatternSearchVO" resultType="PatternVO" >
+        <![CDATA[/* 패턴 정보 NFT 목록 조회 */]]>
+        select a.user_id,
+               a.reg_dt,
+               a.gps_lat,
+               a.gps_lon,
+               a.gyroscope_x,
+               a.gyroscope_y,
+               a.gyroscope_z,
+               a.Timestamp,
+               a.ext2,
+               a.ext3
+        from anomaly_pattern a
+        where 1=1
+        <if test="user_id != null and user_id != ''">
+            and user_id = #{user_id}
+        </if>
+        <if test="startDate != null and startDate != '' and endDate != null and endDate != ''">
+            and a.reg_dt between STR_TO_DATE(#{startDate}, '%Y-%m-%d %H:%i:%s') and STR_TO_DATE(#{endDate}, '%Y-%m-%d %H:%i:%s')
+        </if>
+        order by a.reg_dt
+    </select>
+
+    <!-- 사용자 DTC 획득 날짜-시간대별 정보 -->
+    <select id="getUserDTCHourlyList" parameterType="HashMap" resultType="HashMap" >
+        <![CDATA[/* 사용자 DTC 획득 날짜-시간대별 정보   */]]>
+        select
+            b.app_token,
+            date_format(a.reg_dt, '%Y-%m-%d') as stat_dt,
+            date_format(a.reg_dt, '%H') as stat_dt_hour,
+            sum(amount) as sum_amount
+        from tb_user_dtc_history a
+        inner join tb_account b on a.user_id = b.user_id
+        where dtc_type = 1
+        <if test="user_id != null and user_id != ''">
+            and b.app_token = #{user_id}
+        </if>
+        <if test="startDate != null and startDate != '' and endDate != null and endDate != ''">
+            and a.reg_dt between STR_TO_DATE(concat(#{startDate},' 00:00:00', '%Y-%m-%d %H:%i:%s') and STR_TO_DATE(concat(#{endDate}, ' 23:59:59', '%Y-%m-%d %H:%i:%s')
+        </if>
+        group by b.app_token, date_format(a.reg_dt, '%Y-%m-%d  %H'), date_format(a.reg_dt, '%H')
+        order by date_format(a.reg_dt, '%Y-%m-%d'), date_format(a.reg_dt, '%H')
+    </select>
+
+    <!-- 사용자별 수행미션별 DTC 획득 History -->
+    <select id="getUserTimerRewardHistory" parameterType="HashMap" resultType="HashMap" >
+        <![CDATA[/* 사용자별 수행미션별 DTC 획득 History */]]>
+        select a.timer_idx                                       AS timer_idx,
+               a.user_id                                         AS user_id,
+               b.app_token                                       AS app_token,
+               date_format(a.reg_dt,'%Y-%m-%d %H:%i:%s')     	 AS reg_dt,
+               date_format(a.start_time,'%Y-%m-%d %H:%i:%s')     AS start_time,
+               date_format(a.end_time,'%Y-%m-%d %H:%i:%s')     	 AS end_time,
+               a.gps_variation                                   AS gps_variation,
+               a.pot_amount,
+               a.dtc_amount,
+               a.amount
+        from tb_user_timer_history a
+        join tb_account b on a.user_id = b.user_id
+        where  a.time_type = 0
+            <if test="user_id != null and user_id != ''">
+                and b.app_token = #{user_id}
+            </if>
+            <if test="startDate != null and startDate != '' and endDate != null and endDate != ''">
+                and a.reg_dt between STR_TO_DATE(concat(#{startDate},' 00:00:00', '%Y-%m-%d %H:%i:%s') and STR_TO_DATE(concat(#{endDate}, ' 23:59:59', '%Y-%m-%d %H:%i:%s')
+            </if>
+        order by user_id, a.timer_idx
+    </select>
+
+
+    <!-- 사용자 DTC 획득 날짜-일별 정보 -->
+    <select id="getUserDTCDailyList" parameterType="HashMap" resultType="HashMap" >
+        <![CDATA[/* 사용자 DTC 획득 날짜-일별 정보   */]]>
+        select
+            b.app_token,
+            date_format(a.reg_dt, '%Y-%m-%d') as stat_dt,
+            sum(amount) as sum_amount
+        from tb_user_dtc_history a
+        inner join tb_account b on a.user_id = b.user_id
+        where dtc_type = 1
+        <if test="user_id != null and user_id != ''">
+            and b.app_token = #{user_id}
+        </if>
+        <if test="startDate != null and startDate != '' and endDate != null and endDate != ''">
+            and a.reg_dt between STR_TO_DATE(concat(#{startDate},' 00:00:00', '%Y-%m-%d %H:%i:%s') and STR_TO_DATE(concat(#{endDate}, ' 23:59:59', '%Y-%m-%d %H:%i:%s')
+        </if>
+        group by b.app_token, date_format(a.reg_dt, '%Y-%m-%d')
+        order by date_format(a.reg_dt, '%Y-%m-%d')
+    </select>
+
+    <!-- 사용자 DTC 획득 Raw 데이터 조회 -->
+    <select id="getUserDTCRawList" parameterType="HashMap" resultType="HashMap" >
+        <![CDATA[/* 사용자 DTC 획득 Raw 데이터 조회 */]]>
+        select
+            b.app_token,
+            date_format(a.reg_dt, '%Y-%m-%d %H:%i:%s') as stat_dt,
+            amount
+        from tb_user_dtc_history a
+        inner join tb_account b on a.user_id = b.user_id
+        where dtc_type = 1
+        <if test="user_id != null and user_id != ''">
+            and b.app_token = #{user_id}
+        </if>
+        <if test="startDate != null and startDate != '' and endDate != null and endDate != ''">
+            and a.reg_dt between STR_TO_DATE(concat(#{startDate},' 00:00:00', '%Y-%m-%d %H:%i:%s') and STR_TO_DATE(concat(#{endDate}, ' 23:59:59', '%Y-%m-%d %H:%i:%s')
+        </if>
+        order by a.reg_dt
+    </select>
+
+    <!-- 이상감지패턴 데이터 수집 -->
+    <insert id="insertPattern" parameterType="PatternVO">
+        <![CDATA[/* 이상감지패턴 데이터 수집  */]]>
+        insert into anomaly_pattern
+        (
+            user_id,
+            reg_dt,
+            gps_lat,
+            gps_lon,
+            gyroscope_x,
+            gyroscope_y,
+            gyroscope_z,
+            Timestamp,
+            ext2,
+            ext3
+        )
+        values
+        (
+            #{user_id},
+            now(),
+            #{gps_lat},
+            #{gps_lon},
+            #{gyroscope_x},
+            #{gyroscope_y},
+            #{gyroscope_z},
+            #{Timestamp},
+            #{ext2},
+            #{ext3}
+        )
+    </insert>
+
+    <!-- 사용자 미션수행결과 GPS 변동량 업데이트 -->
+    <update id="updateTimerVariation" parameterType="UserTimeHistoryVO">
+        <![CDATA[/* 사용자 미션수행결과 GPS 변동량 업데이트 */]]>
+        update tb_user_timer_history set gps_variation = #{gps_variation} where timer_idx = #{timer_idx}
+    </update>
+</mapper>

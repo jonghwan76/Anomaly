@@ -1,0 +1,66 @@
+/* For treemenu.js */
+
+.treemenu li {list-style: none;}
+
+.toggler {
+    width: 1em;
+    height: 1em;
+    display: inline-block;
+    cursor: default;
+    font-size: 0.8em;
+    text-align: center;
+    padding: 0.1em;
+    margin-left: -1.4em;
+    margin-right: 0.6em;
+    border: 0em solid transparent;
+    border-radius: 50%;
+    color: rgba(184, 52, 0, 1);
+}
+
+li.tree-opened > .toggler:hover,
+li.tree-closed > .toggler:hover {
+    border-color: #aaa;
+    cursor: pointer;
+}
+
+li.tree-empty > .toggler { color: rgbargba(184, 52, 0, 1); }
+li.tree-empty > span.toggler:before { content: "\2212"; }
+li.tree-closed > span.toggler:before { content: "+"; }
+li.tree-opened > span.toggler:before { content: "\2212"; }
+
+.tree li,
+.tree li > a,
+.tree li > span {
+    padding-left:6pt;
+    padding-top:2pt;
+    border-radius: 4px;
+}
+
+.tree li a {
+   color:rgba(98, 102, 96, 1);
+    text-decoration: none;
+    border-radius: 4px;
+}
+
+.tree li a:hover {
+    background-color: #6E6E6E;
+    color: #fff;
+}
+
+.comsysact {
+    background-color: #210B61;
+    color: white;
+}
+
+.comsysact a {
+    color: #fff;
+}
+
+.active {
+    background-color: navajoWhite;
+    color: white;
+}
+
+.active a {
+    color: #fff;
+}

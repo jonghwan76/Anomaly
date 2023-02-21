@@ -1,0 +1,1 @@
+package com.realblox.dimetime.util.exception;@SuppressWarnings("serial")public class FileNotAllowException extends FileException {	public FileNotAllowException(String fileNotAllowMSG) {		super(fileNotAllowMSG);	}	public FileNotAllowException() {		// TODO Auto-generated constructor stub	}}

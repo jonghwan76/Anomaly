@@ -1,0 +1,19 @@
+@charset "utf-8";
+/* CSS Document */
+@media screen and (max-width: 950px){
+	.logo_wrap{width:50%;height:50%}
+	
+}
+body{background-color:#e2f0fb;display:flex;align-items:center;justify-content:center;}
+h1{padding-bottom:65px;}
+.logo_input{border-bottom:1px solid #7481a3;}
+.logo_input input{padding-top:40px;padding-left:7px;padding-bottom:12px;color:#314c91;font-size:18px;font-weight:400}
+.logo_input input::-webkit-input-placeholder{color:#314c91 !important;}
+input[type="checkbox"] {display:none;}
+input[type="checkbox"] + label span {display:inline-block;width:25px;height:25px;margin:0 10px 2px 0;vertical-align:middle;background:url("../images/check.gif") left top no-repeat;cursor:pointer;}
+input[type="checkbox"]:checked + label span {background:url("../images/check_on.gif") left top no-repeat;}
+.cu_check{padding-top:40px;color:#314c91;font-size:18px;font-weight:400;letter-spacing:0px;vertical-align:bottom}
+.cu_check input[type="checkbox"] + label span{margin-right:10px}
+.login_btn{margin-top:80px;background-color:#fff;border-radius:50px;width:100%;line-height:70px;font-size:26px;font-weight:900;color:#222534;box-shadow:0px 3px 0px #bcd8eb}
+.login_btn:hover{background-color:#007eff;color:#fff}
+.Resolution{padding-top:25px;text-align:center;font-size:16px;color:#5d80af;letter-spacing:0px;}
