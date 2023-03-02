@@ -67,9 +67,19 @@ public class PatternApiController {
                 patternVO.setUser_id(obj.getString("user_id"));
                 patternVO.setGps_lat(obj.getString("gps_lat"));
                 patternVO.setGps_lon(obj.getString("gps_lon"));
-                patternVO.setGyroscope_x(obj.getString("gyroscope_x"));
-                patternVO.setGyroscope_y(obj.getString("gyroscope_y"));
-                patternVO.setGyroscope_z(obj.getString("gyroscope_z"));
+
+                try {
+                    patternVO.setGyroscope_x(obj.getString("gyroscope_x"));
+                } catch (Exception e) {}
+
+                try {
+                    patternVO.setGyroscope_y(obj.getString("gyroscope_y"));
+                } catch (Exception e) {}
+
+                try {
+                    patternVO.setGyroscope_z(obj.getString("gyroscope_z"));
+                } catch (Exception e) {}
+
 
                 try {
                     patternVO.setTimestamp(obj.getString("Timestamp"));
@@ -88,7 +98,7 @@ public class PatternApiController {
 
             retData.put("result", "200");
             retData.put("msg", "ok");
-            retData.put("data", data);
+//            retData.put("data", data);
         } catch (Exception e) {
             _logger.info(e.toString());
             retData.put("result", false);
