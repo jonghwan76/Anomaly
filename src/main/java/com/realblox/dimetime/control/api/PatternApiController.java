@@ -2,15 +2,14 @@ package com.realblox.dimetime.control.api;
 
 import com.realblox.dimetime.model.PatternSearchVO;
 import com.realblox.dimetime.model.PatternVO;
-import com.realblox.dimetime.model.UserTimeHistoryVO;
 import com.realblox.dimetime.service.PatternService;
+import com.realblox.dimetime.util.ExcelUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -23,12 +22,25 @@ import java.util.List;
 import java.util.Map;
 
 @Controller
+@Slf4j
 @RequestMapping("/api/pattern/")
 public class PatternApiController {
-    Logger _logger = LoggerFactory.getLogger( PatternApiController.class );
-
+    @Value("${excel.path}")
+    private String excelPath = "";
     @Autowired
     PatternService patternService;
+
+    /**
+     * 엑셀읽기
+     * @return
+     */
+    @RequestMapping("/readCsv")
+    @ResponseBody
+    public List<HashMap> readCsv() {
+        ExcelUtil excelUtil = new ExcelUtil();
+        List<HashMap> list = excelUtil.readCsv(excelPath + "mid_risk_group.csv");
+        return list;
+    }
 
     /**
      * 패턴정보조회
@@ -100,7 +112,7 @@ public class PatternApiController {
             retData.put("msg", "ok");
 //            retData.put("data", data);
         } catch (Exception e) {
-            _logger.info(e.toString());
+            log.info(e.toString());
             retData.put("result", false);
             retData.put("msg", "false");
         }
@@ -131,7 +143,7 @@ public class PatternApiController {
             }
 
         } catch (Exception e) {
-            _logger.info(e.toString());
+            log.info(e.toString());
             retData.put("result", false);
             retData.put("msg", e.toString());
         }
