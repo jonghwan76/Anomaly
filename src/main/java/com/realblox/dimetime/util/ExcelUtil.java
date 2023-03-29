@@ -18,8 +18,6 @@ public class ExcelUtil {
 	PatternService patternService;
 
 	public List<RiskVO> readCsv(String path, String today)  {
-		log.info("========================= readCsv Start =========================");
-
 		List<RiskVO> list = new ArrayList<>();
 
 		File csv = new File(path);
@@ -51,7 +49,6 @@ public class ExcelUtil {
 				log.error(e.toString());
 			}
 		}
-		log.info("========================= readCsv End =========================");
 		return list;
 
 	}

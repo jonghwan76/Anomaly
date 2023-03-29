@@ -1,0 +1,137 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security4" lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=2.0, minimum-scale=1.0, user-scalable=yes">
+  <link href="../css/reset.css" rel="stylesheet" type="text/css">
+  <link href="../css/sub_style.css" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/moonspam/NanumSquare@1.0/nanumsquare.css">
+  <title>DimeTime Admin</title>
+  <script src="http://code.jquery.com/jquery-latest.js"></script>
+  <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+  <script type="text/javascript">
+    $(document).ready(function() {
+      $(".btn_all_menu").click(function(){
+        $(".nav_m_bg").show();
+      });
+      $('.nav_m_close_btn').click(function() {
+        $('.nav_m_bg').hide();
+      });
+    });
+
+    $(document).ready(function() {
+      $(".popup_open").click(function(){
+        $(".popup_wrap").show();
+      });
+      $('.popup_close_btn').click(function() {
+        $('.popup_wrap').hide();
+      });
+    });
+
+    $(document).ready(function(){
+
+      $('ul.tabs li').click(function(){
+        var tab_id = $(this).attr('data-tab');
+
+        $('ul.tabs li').removeClass('current');
+        $('.tab-content').removeClass('current');
+
+        $(this).addClass('current');
+        $("#"+tab_id).addClass('current');
+      })
+
+    })
+  </script>
+</head>
+
+<body>
+<div class="nav_m_bg">
+  <div class="nav_m_list font">
+    <p class="nav_m_close_btn_wpan"><a class="nav_m_close_btn" href="#"></a></p>
+<!--    <p class="admin">Admin<burron class="logout_m">로그아웃</burron></p>-->
+  </div>
+</div>
+
+<header>
+  <nav>이상패턴감지분석 사용자 목록</nav>
+  <div class="nav_m">
+    <a href="#" class="btn_all_menu">
+      <span class="barTop"></span>
+      <span class="barMid"></span>
+      <span class="barBot"></span>
+    </a>
+  </div>
+</header>
+<!-- content start -->
+<div class="content_wrap fl_r">
+  <div class="search_wrap mt_50">
+    <div class="search_section_wrap">
+      <div class="search_section">
+        <input id="search_word" style="width:500px" type="text" th:value="${search_word}" onkeydown="JavaScript:if(event.keyCode == 13){fncSearch();return;}" maxlength="100" placeholder="User ID, NickName, Account ID, Product ID">
+        <button onclick="fncSearch()" class="label_lp2 search_btn">검색</button>
+      </div>
+    </div>
+  </div>
+  <br>
+  <br>
+
+  <div class="search_container">
+    <div class="write_title">
+      <p>이상패턴감지 사용자 순위</p>
+    </div>
+
+    <div class="tt_text ttt_p02">
+      <span>총 <b><th:block th:text="${user_list.size()}">10</th:block>건</b>의 목록이 있습니다.</span>
+    </div>
+    <div class="table01">
+      <table>
+        <thead>
+        <tr>
+          <th style="width:10%">집계날짜</th>
+          <th style="width:10%">위험순위</th>
+          <th style="width:10%">사용자아이디</th>
+          <th style="width:10%">사용자명</th>
+          <th style="width:10%">로그인시간</th>
+          <th style="width:15%">보유POT</th>
+          <th style="width:15%">보유DTC</th>
+          <th style="width:10%">NFT목록</th>
+          <th style="width:10%">회원등록일</th>
+        </tr>
+        </thead>
+      </table>
+      <div class="table_con">
+        <table class="font">
+          <tbody>
+          <th:block th:if="${user_list.size() > 0}">
+            <th:block th:each="item, index :${user_list}">
+                <tr>
+                  <td style="width:10%" th:text="${item.stat_dt}"></td>
+                  <td style="width:10%" th:text="${item.user_order}"></td>
+                  <td style="width:10%" th:text="${item.user_id}"></td>
+                  <td style="width:10%" th:text="${item.user_name}"></td>
+                  <td style="width:10%" th:text="${item.login_time}"></td>
+                  <td style="width:15%" th:text="${item.total_pot}"></td>
+                  <td style="width:15%" th:text="${item.total_dtc}"></td>
+                  <td style="width:10%" th:text="${item.nft_list}"></td>
+                  <td style="width:10%" th:text="${item.reg_dt}"></td>
+                </tr>
+            </th:block>
+          </th:block>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+</div>
+<!-- content end -->
+</body>
+
+<script>
+  //검색
+  function fncSearch() {
+    // location.href = "/refund?search_word=" + $("#search_word").val();
+  }
+</script>
+</html>

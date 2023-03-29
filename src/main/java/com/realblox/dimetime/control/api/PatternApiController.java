@@ -2,6 +2,7 @@ package com.realblox.dimetime.control.api;
 
 import com.realblox.dimetime.model.PatternSearchVO;
 import com.realblox.dimetime.model.PatternVO;
+import com.realblox.dimetime.model.RiskOrderVO;
 import com.realblox.dimetime.model.RiskVO;
 import com.realblox.dimetime.service.PatternService;
 import com.realblox.dimetime.util.DateUtils;
@@ -50,45 +51,84 @@ public class PatternApiController {
             Runtime runtime = Runtime.getRuntime();
             StringBuffer cmdResult = new StringBuffer();
 
+/*
+            //main.py --------------------------------------------------------------- start
             process = runtime.exec(excelPath + "main.bat");
             process.waitFor();
-            BufferedReader reader=new BufferedReader(
+            BufferedReader reader1=new BufferedReader(
                     new InputStreamReader(process.getInputStream())
             );
-            while((line = reader.readLine()) != null)
+            while((line = reader1.readLine()) != null)
             {
                 cmdResult.append(line);
             }
             log.info(cmdResult.toString());
+            //main.py --------------------------------------------------------------- end
 
+ */
+
+
+            //kmeans.py ------------------------------------------------------------- start
+            cmdResult = new StringBuffer();
             process = runtime.exec(excelPath + "kmeans.bat");
             process.waitFor();
-            reader=new BufferedReader(
+            BufferedReader reader2=new BufferedReader(
                     new InputStreamReader(process.getInputStream())
             );
-            while((line = reader.readLine()) != null)
+            while((line = reader2.readLine()) != null)
             {
                 cmdResult.append(line);
             }
             log.info(cmdResult.toString());
+            //kmeans.py ------------------------------------------------------------- end
 
-
+            //analyze.py ------------------------------------------------------------ start
+            String analyzeResult = "";
+            String[] splitAnalyzeResult = null;
+            cmdResult = new StringBuffer();
             process = runtime.exec(excelPath + "analyze.bat");
             process.waitFor();
-            reader=new BufferedReader(
+            BufferedReader reader3=new BufferedReader(
                     new InputStreamReader(process.getInputStream())
             );
-            while((line = reader.readLine()) != null)
+            while((line = reader3.readLine()) != null)
             {
                 cmdResult.append(line);
             }
-            log.info("---- 순위 ----");
             log.info(cmdResult.toString());
+            analyzeResult = cmdResult.substring(cmdResult.indexOf("("), cmdResult.lastIndexOf(")")+1);
+            splitAnalyzeResult = analyzeResult.split("\\)");
 
+            log.info("---- 순위 원본 ----");
+            log.info(analyzeResult);
+            log.info("---- 순위 원본 Split ----");
+
+            //금일 데이터 삭제
+            patternService.deleteRiskOrder(today);
+
+            int order = 0;
+            for(int i=0;i<splitAnalyzeResult.length;i++) {
+                String row = splitAnalyzeResult[i];
+                String[] arrarRow = null;
+                row = row.replaceAll("\\(", "");
+                row = row.replaceAll("\\'", "");
+                row = row.replaceAll(" ", "");
+                arrarRow = row.split(",");
+
+                RiskOrderVO riskOrderVO = new RiskOrderVO();
+                riskOrderVO.setUser_id(arrarRow[0]);
+                riskOrderVO.setUser_order( (order++) + "");
+                riskOrderVO.setStat_dt( today );
+
+                patternService.insertRiskOrder(riskOrderVO);
+//                log.info(arrarRow[0]);
+//                log.info(arrarRow[1]);
+            }
+            //analyze.py ------------------------------------------------------------ end
 
             ExcelUtil excelUtil = new ExcelUtil();
-            List<RiskVO> list1 = excelUtil.readCsv(excelPath + "high_risk_group.csv", today);
-            List<RiskVO> list2 = excelUtil.readCsv(excelPath + "mid_risk_group.csv", today);
+            List<RiskVO> list1 = excelUtil.readCsv(excelPath + "\\result\\high_risk_group.csv", today);
+            List<RiskVO> list2 = excelUtil.readCsv(excelPath + "\\result\\mid_risk_group.csv", today);
 
             for(RiskVO riskVO:list1) {
                 patternService.insertHighAnomaly(riskVO);
@@ -106,6 +146,8 @@ public class PatternApiController {
 
         return retMap;
     }
+
+
 
     /**
      * 패턴정보조회

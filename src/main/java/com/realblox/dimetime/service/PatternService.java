@@ -3,6 +3,7 @@ package com.realblox.dimetime.service;
 import com.realblox.dimetime.dao.PatternMapper;
 import com.realblox.dimetime.model.PatternSearchVO;
 import com.realblox.dimetime.model.PatternVO;
+import com.realblox.dimetime.model.RiskOrderVO;
 import com.realblox.dimetime.model.RiskVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,5 +32,11 @@ public class PatternService {
 
     public int insertMidAnomaly(RiskVO riskVO) {
         return patternMapper.insertMidAnomaly(riskVO);
+    }
+    public int deleteRiskOrder(String stat_dt) {
+        return patternMapper.deleteRiskOrder(stat_dt);
+    }
+    public int insertRiskOrder(RiskOrderVO riskOrderVO) {
+        return patternMapper.insertRiskOrder(riskOrderVO);
     }
 }

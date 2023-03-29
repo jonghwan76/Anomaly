@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.realblox.dimetime.dao.UserMapper">
+    <!-- 이상패턴감지결과 사용자 순위정보 -->
+    <select id="getUserList" parameterType="UserRiskVO" resultType="UserRiskVO" >
+        <![CDATA[/* 이상패턴감지결과 사용자 순위정보 */]]>
+        select
+            a.stat_dt,
+            a.reg_dt as risk_dt,
+            a.user_order,
+            a.user_id,
+            b.user_name,
+            b.app_token,
+            b.total_pot,
+            b.total_dtc,
+            b.rest_yn,
+            group_concat(c.nft_idx) as nft_list,
+            b.reg_dt
+        from risk_order a
+        inner join tb_account b on a.user_id = b.user_id
+        inner join tb_user_nft c on a.user_id = c.user_id
+        where 1=1
+        <if test="user_id != null and user_id != ''">
+            and b.user_id = #{user_id}
+        </if>
+        <if test="startDate != null and startDate != '' and endDate != null and endDate != ''">
+            and a.stat_dt between STR_TO_DATE(#{startDate}, '%Y-%m-%d %H:%i:%s') and STR_TO_DATE(#{endDate}, '%Y-%m-%d %H:%i:%s')
+        </if>
+        group by
+            a.stat_dt,
+            a.reg_dt,
+            a.user_order,
+            a.user_id,
+            b.user_name,
+            b.app_token,
+            b.total_pot,
+            b.total_dtc,
+            b.rest_yn,
+            b.reg_dt
+        order by a.stat_dt, a.user_order
+    </select>
+</mapper>
