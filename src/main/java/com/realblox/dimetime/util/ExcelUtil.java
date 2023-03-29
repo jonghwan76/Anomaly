@@ -1,6 +1,10 @@
 package com.realblox.dimetime.util;
 
+import com.realblox.dimetime.model.RiskVO;
+import com.realblox.dimetime.service.PatternService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+
 import java.io.*;
 import java.nio.charset.Charset;
 import java.util.*;
@@ -10,8 +14,13 @@ import java.util.*;
  */
 @Slf4j
 public class ExcelUtil {
-	public static List<HashMap> readCsv(String path)  {
-		List<HashMap> list = new ArrayList<>();
+	@Autowired
+	PatternService patternService;
+
+	public List<RiskVO> readCsv(String path, String today)  {
+		log.info("========================= readCsv Start =========================");
+
+		List<RiskVO> list = new ArrayList<>();
 
 		File csv = new File(path);
 		BufferedReader br = null;
@@ -21,12 +30,14 @@ public class ExcelUtil {
 			String line = "";
 
 			while((line=br.readLine()) != null) {
+//				log.info("line data:" + line);
 				String[] token = line.split(",");
-				HashMap hashMap = new HashMap();
-				hashMap.put("col1", token[0]);
-				hashMap.put("col2", token[1]);
-				hashMap.put("col3", token[2]);
-				list.add(hashMap);
+				RiskVO riskVO = new RiskVO();
+				riskVO.setUser_id(token[0]);
+				riskVO.setGps_variation(token[1]);
+				riskVO.setTime_amount(token[2]);
+				riskVO.setStat_dt(today);
+				list.add(riskVO);
 			}
 
 		} catch (FileNotFoundException e) {
@@ -40,8 +51,9 @@ public class ExcelUtil {
 				log.error(e.toString());
 			}
 		}
-
+		log.info("========================= readCsv End =========================");
 		return list;
+
 	}
 	
 }

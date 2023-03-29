@@ -10,6 +10,6 @@ import java.util.List;
 public interface PatternMapper {
     List<PatternVO> getPatternList(PatternSearchVO patternSearchVO);
     int insertPattern(PatternVO patternVO);
-    int insertHiAnomaly(RiskVO riskVO);
+    int insertHighAnomaly(RiskVO riskVO);
     int insertMidAnomaly(RiskVO riskVO);
 }

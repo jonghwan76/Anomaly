@@ -2,7 +2,9 @@ package com.realblox.dimetime.control.api;
 
 import com.realblox.dimetime.model.PatternSearchVO;
 import com.realblox.dimetime.model.PatternVO;
+import com.realblox.dimetime.model.RiskVO;
 import com.realblox.dimetime.service.PatternService;
+import com.realblox.dimetime.util.DateUtils;
 import com.realblox.dimetime.util.ExcelUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONArray;
@@ -16,6 +18,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.net.URLDecoder;
 import java.util.HashMap;
 import java.util.List;
@@ -36,10 +40,71 @@ public class PatternApiController {
      */
     @RequestMapping("/readCsv")
     @ResponseBody
-    public List<HashMap> readCsv() {
-        ExcelUtil excelUtil = new ExcelUtil();
-        List<HashMap> list = excelUtil.readCsv(excelPath + "mid_risk_group.csv");
-        return list;
+    public HashMap readCsv() {
+        HashMap retMap = new HashMap();
+        String line = "";
+        String today =  DateUtils.getDateToString("yyyy-MM-dd");
+
+        try {
+            Process process = null;
+            Runtime runtime = Runtime.getRuntime();
+            StringBuffer cmdResult = new StringBuffer();
+
+            process = runtime.exec(excelPath + "main.bat");
+            process.waitFor();
+            BufferedReader reader=new BufferedReader(
+                    new InputStreamReader(process.getInputStream())
+            );
+            while((line = reader.readLine()) != null)
+            {
+                cmdResult.append(line);
+            }
+            log.info(cmdResult.toString());
+
+            process = runtime.exec(excelPath + "kmeans.bat");
+            process.waitFor();
+            reader=new BufferedReader(
+                    new InputStreamReader(process.getInputStream())
+            );
+            while((line = reader.readLine()) != null)
+            {
+                cmdResult.append(line);
+            }
+            log.info(cmdResult.toString());
+
+
+            process = runtime.exec(excelPath + "analyze.bat");
+            process.waitFor();
+            reader=new BufferedReader(
+                    new InputStreamReader(process.getInputStream())
+            );
+            while((line = reader.readLine()) != null)
+            {
+                cmdResult.append(line);
+            }
+            log.info("---- 순위 ----");
+            log.info(cmdResult.toString());
+
+
+            ExcelUtil excelUtil = new ExcelUtil();
+            List<RiskVO> list1 = excelUtil.readCsv(excelPath + "high_risk_group.csv", today);
+            List<RiskVO> list2 = excelUtil.readCsv(excelPath + "mid_risk_group.csv", today);
+
+            for(RiskVO riskVO:list1) {
+                patternService.insertHighAnomaly(riskVO);
+            }
+
+            for(RiskVO riskVO:list2) {
+                patternService.insertMidAnomaly(riskVO);
+            }
+
+            retMap.put("high_cnt", list1.size());
+            retMap.put("mid_cnt", list2.size());
+        } catch(Exception e) {
+            log.info(e.toString());
+        }
+
+        return retMap;
     }
 
     /**

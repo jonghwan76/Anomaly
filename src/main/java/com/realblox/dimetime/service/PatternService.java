@@ -25,8 +25,8 @@ public class PatternService {
     public int insertPattern(PatternVO patternVO) {
         return patternMapper.insertPattern(patternVO);
     }
-    public int insertHiAnomaly(RiskVO riskVO) {
-        return patternMapper.insertHiAnomaly(riskVO);
+    public int insertHighAnomaly(RiskVO riskVO) {
+        return patternMapper.insertHighAnomaly(riskVO);
     }
 
     public int insertMidAnomaly(RiskVO riskVO) {

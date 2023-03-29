@@ -58,20 +58,22 @@
     </insert>
 
     <!-- HI RISK 분석결과 등록 -->
-    <insert id="insertHiAnomaly" parameterType="RiskVO">
+    <insert id="insertHighAnomaly" parameterType="RiskVO">
         <![CDATA[/* HI RISK 분석결과 등록 */]]>
-        insert into hi_risk_group
+        insert into high_risk_group
         (
             user_id,
             gps_variation,
             time_amount,
+            stat_dt,
             reg_dt
         )
         values
         (
-            user_id,
-            gps_variation,
-            time_amount,
+            #{user_id},
+            #{gps_variation},
+            #{time_amount},
+            #{stat_dt},
             now()
         )
     </insert>
@@ -84,13 +86,15 @@
             user_id,
             gps_variation,
             time_amount,
+            stat_dt,
             reg_dt
         )
         values
         (
-            user_id,
-            gps_variation,
-            time_amount,
+            #{user_id},
+            #{gps_variation},
+            #{time_amount},
+            #{stat_dt},
             now()
         )
     </insert>

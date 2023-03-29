@@ -12,7 +12,18 @@ public class DateUtils {
 	
 	private static String defaultFormatString = "yyyyMMddHHmmss";
 	private static DateFormat defaultFormatter = new SimpleDateFormat(defaultFormatString);
-	
+
+	/**
+	 * 오늘 날짜를 형식에 맞는 문자열로 가져옵니다.
+	 *
+	 * @param format
+	 * @return
+	 */
+	public static String getDateToString(String format) {
+		Date date = new Date();
+		return getDateToString(date, format);
+	}
+
 	private static String getString(String val) {
 		if (val == null) {
 			return "";
