@@ -10,6 +10,8 @@ public class UserRiskVO {
     private String risk_dt;
     private String user_order;
     private String user_id;
+    private String gps_variation;
+    private String time_amount;
     private String user_name;
     private String app_token;
     private String login_time;
@@ -23,5 +25,6 @@ public class UserRiskVO {
 
     private String startDate;
     private String endDate;
+    private String search_word;
 
 }

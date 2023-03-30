@@ -99,16 +99,41 @@
         )
     </insert>
 
-    <!-- 이상패턴감지 분석결과 삭제 -->
-    <insert id="deleteRiskOrder" parameterType="String">
-        <![CDATA[/* 이상패턴감지 분석결과 순위 등록 */]]>
-        delete from risk_order where stat_dt = #{stat_dt}
+    <!-- 이상패턴감지 고위험군 분석결과 삭제 -->
+    <insert id="deleteHighRiskOrder" parameterType="String">
+        <![CDATA[/* 이상패턴감지 고위험군 분석결과 순위 등록 */]]>
+        delete from high_risk_order where stat_dt = #{stat_dt}
     </insert>
 
-    <!-- 이상패턴감지 분석결과 순위 등록 -->
-    <insert id="insertRiskOrder" parameterType="RiskOrderVO">
-        <![CDATA[/* 이상패턴감지 분석결과 순위 등록 */]]>
-        insert into risk_order
+    <!-- 이상패턴감지 중간위험군 분석결과 삭제 -->
+    <insert id="deleteHighRiskOrder" parameterType="String">
+        <![CDATA[/* 이상패턴감지 중간위험군 분석결과 순위 등록 */]]>
+    delete from mid_risk_order where stat_dt = #{stat_dt}
+    </insert>
+
+    <!-- 이상패턴감지 중간위험군 분석결과 순위 등록 -->
+    <insert id="insertMidRiskOrder" parameterType="RiskOrderVO">
+        <![CDATA[/* 이상패턴감지 중간위험군 분석결과 순위 등록 */]]>
+        insert into mid_risk_order
+        (
+            user_id,
+            user_order,
+            stat_dt,
+            reg_dt
+        )
+        values
+        (
+            #{user_id},
+            #{user_order},
+            #{stat_dt},
+            now()
+        )
+    </insert>
+
+    <!-- 이상패턴감지 고위험군 분석결과 순위 등록 -->
+    <insert id="insertHighRiskOrder" parameterType="RiskOrderVO">
+        <![CDATA[/* 이상패턴감지 고위험군 분석결과 순위 등록 */]]>
+        insert into high_risk_order
         (
             user_id,
             user_order,

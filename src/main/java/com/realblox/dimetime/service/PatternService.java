@@ -33,10 +33,16 @@ public class PatternService {
     public int insertMidAnomaly(RiskVO riskVO) {
         return patternMapper.insertMidAnomaly(riskVO);
     }
-    public int deleteRiskOrder(String stat_dt) {
-        return patternMapper.deleteRiskOrder(stat_dt);
+    public int deleteHighRiskOrder(String stat_dt) {
+        return patternMapper.deleteHighRiskOrder(stat_dt);
     }
-    public int insertRiskOrder(RiskOrderVO riskOrderVO) {
-        return patternMapper.insertRiskOrder(riskOrderVO);
+    public int deleteMidRiskOrder(String stat_dt) {
+        return patternMapper.deleteMidRiskOrder(stat_dt);
+    }
+    public int insertHighRiskOrder(RiskOrderVO riskOrderVO) {
+        return patternMapper.insertHighRiskOrder(riskOrderVO);
+    }
+    public int insertMidRiskOrder(RiskOrderVO riskOrderVO) {
+        return patternMapper.insertMidRiskOrder(riskOrderVO);
     }
 }

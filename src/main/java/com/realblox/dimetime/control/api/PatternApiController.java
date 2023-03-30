@@ -82,11 +82,11 @@ public class PatternApiController {
             log.info(cmdResult.toString());
             //kmeans.py ------------------------------------------------------------- end
 
-            //analyze.py ------------------------------------------------------------ start
-            String analyzeResult = "";
-            String[] splitAnalyzeResult = null;
+            //analyze_high.py ------------------------------------------------------------ start
+            String analyzeResult1 = "";
+            String[] splitAnalyzeResult1 = null;
             cmdResult = new StringBuffer();
-            process = runtime.exec(excelPath + "analyze.bat");
+            process = runtime.exec(excelPath + "analyze_high.bat");
             process.waitFor();
             BufferedReader reader3=new BufferedReader(
                     new InputStreamReader(process.getInputStream())
@@ -96,19 +96,19 @@ public class PatternApiController {
                 cmdResult.append(line);
             }
             log.info(cmdResult.toString());
-            analyzeResult = cmdResult.substring(cmdResult.indexOf("("), cmdResult.lastIndexOf(")")+1);
-            splitAnalyzeResult = analyzeResult.split("\\)");
+            analyzeResult1 = cmdResult.substring(cmdResult.indexOf("("), cmdResult.lastIndexOf(")")+1);
+            splitAnalyzeResult1 = analyzeResult1.split("\\)");
 
-            log.info("---- 순위 원본 ----");
-            log.info(analyzeResult);
-            log.info("---- 순위 원본 Split ----");
+            log.info("---- 고위험군 순위 원본 ----");
+            log.info(analyzeResult1);
+            log.info("---- 고위험군 순위 원본 Split ----");
 
-            //금일 데이터 삭제
-            patternService.deleteRiskOrder(today);
+            //금일 고위험군 데이터 삭제
+            patternService.deleteHighRiskOrder(today);
 
-            int order = 0;
-            for(int i=0;i<splitAnalyzeResult.length;i++) {
-                String row = splitAnalyzeResult[i];
+            int order1 = 0;
+            for(int i=0;i<splitAnalyzeResult1.length;i++) {
+                String row = splitAnalyzeResult1[i];
                 String[] arrarRow = null;
                 row = row.replaceAll("\\(", "");
                 row = row.replaceAll("\\'", "");
@@ -117,14 +117,60 @@ public class PatternApiController {
 
                 RiskOrderVO riskOrderVO = new RiskOrderVO();
                 riskOrderVO.setUser_id(arrarRow[0]);
-                riskOrderVO.setUser_order( (order++) + "");
+                riskOrderVO.setUser_order( (order1++) + "");
                 riskOrderVO.setStat_dt( today );
 
-                patternService.insertRiskOrder(riskOrderVO);
+                patternService.insertHighRiskOrder(riskOrderVO);
 //                log.info(arrarRow[0]);
 //                log.info(arrarRow[1]);
             }
-            //analyze.py ------------------------------------------------------------ end
+            //analyze_high.py ------------------------------------------------------------ end
+
+
+            //analyze_mid.py ------------------------------------------------------------ start
+            String analyzeResult2 = "";
+            String[] splitAnalyzeResult2 = null;
+            cmdResult = new StringBuffer();
+            process = runtime.exec(excelPath + "analyze_mid.bat");
+            process.waitFor();
+            BufferedReader reader4=new BufferedReader(
+                    new InputStreamReader(process.getInputStream())
+            );
+            while((line = reader4.readLine()) != null)
+            {
+                cmdResult.append(line);
+            }
+            log.info(cmdResult.toString());
+            analyzeResult2 = cmdResult.substring(cmdResult.indexOf("("), cmdResult.lastIndexOf(")")+1);
+            splitAnalyzeResult2 = analyzeResult2.split("\\)");
+
+            log.info("---- 중간위험군 순위 원본 ----");
+            log.info(analyzeResult2);
+            log.info("---- 중간위험군 순위 원본 Split ----");
+
+            //금일 고위험군 데이터 삭제
+            patternService.deleteMidRiskOrder(today);
+
+            int order2 = 0;
+            for(int i=0;i<splitAnalyzeResult2.length;i++) {
+                String row = splitAnalyzeResult2[i];
+                String[] arrarRow = null;
+                row = row.replaceAll("\\(", "");
+                row = row.replaceAll("\\'", "");
+                row = row.replaceAll(" ", "");
+                arrarRow = row.split(",");
+
+                RiskOrderVO riskOrderVO = new RiskOrderVO();
+                riskOrderVO.setUser_id(arrarRow[0]);
+                riskOrderVO.setUser_order( (order2++) + "");
+                riskOrderVO.setStat_dt( today );
+
+                patternService.insertMidRiskOrder(riskOrderVO);
+//                log.info(arrarRow[0]);
+//                log.info(arrarRow[1]);
+            }
+            //analyze_mid.py ------------------------------------------------------------ end
+
 
             ExcelUtil excelUtil = new ExcelUtil();
             List<RiskVO> list1 = excelUtil.readCsv(excelPath + "\\result\\high_risk_group.csv", today);

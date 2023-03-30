@@ -2,9 +2,9 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 
 <mapper namespace="com.realblox.dimetime.dao.UserMapper">
-    <!-- 이상패턴감지결과 사용자 순위정보 -->
+    <!-- 이상패턴감지결과 고위험군 사용자 순위정보 -->
     <select id="getUserList" parameterType="UserRiskVO" resultType="UserRiskVO" >
-        <![CDATA[/* 이상패턴감지결과 사용자 순위정보 */]]>
+        <![CDATA[/* 이상패턴감지결과 고위험군 사용자 순위정보 */]]>
         select
             a.stat_dt,
             a.reg_dt as risk_dt,
@@ -26,6 +26,10 @@
         </if>
         <if test="startDate != null and startDate != '' and endDate != null and endDate != ''">
             and a.stat_dt between STR_TO_DATE(#{startDate}, '%Y-%m-%d %H:%i:%s') and STR_TO_DATE(#{endDate}, '%Y-%m-%d %H:%i:%s')
+        </if>
+        <if test="search_word != null and search_word != ''">
+            and a.user_id concat('%',#{user_id},'%') or
+
         </if>
         group by
             a.stat_dt,

@@ -13,6 +13,9 @@ public interface PatternMapper {
     int insertPattern(PatternVO patternVO);
     int insertHighAnomaly(RiskVO riskVO);
     int insertMidAnomaly(RiskVO riskVO);
-    int deleteRiskOrder(String stat_dt);
-    int insertRiskOrder(RiskOrderVO riskOrderVO);
+    int deleteHighRiskOrder(String stat_dt);
+    int deleteMidRiskOrder(String stat_dt);
+
+    int insertHighRiskOrder(RiskOrderVO riskOrderVO);
+    int insertMidRiskOrder(RiskOrderVO riskOrderVO);
 }
