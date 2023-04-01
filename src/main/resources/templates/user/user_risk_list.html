@@ -82,7 +82,7 @@
     </div>
 
     <div class="tt_text ttt_p02">
-      <span>총 <b><th:block th:text="${user_list.size()}">10</th:block>건</b>의 목록이 있습니다.</span>
+      <span>총 <b><th:block th:text="${user_high_list.size()}">10</th:block>건</b>의 목록이 있습니다.</span>
     </div>
     <div class="table01">
       <table>
@@ -104,8 +104,8 @@
       <div class="table_con">
         <table class="font">
           <tbody>
-          <th:block th:if="${user_list.size() > 0}">
-            <th:block th:each="item, index :${user_list}">
+          <th:block th:if="${user_high_list.size() > 0}">
+            <th:block th:each="item, index :${user_high_list}">
                 <tr>
                   <td style="width:5%" th:text="${item.stat_dt}"></td>
                   <td style="width:5%" th:text="${item.user_order}"></td>
@@ -132,7 +132,7 @@
     </div>
 
     <div class="tt_text ttt_p02">
-      <span>총 <b><th:block th:text="${user_list.size()}">10</th:block>건</b>의 목록이 있습니다.</span>
+      <span>총 <b><th:block th:text="${user_mid_list.size()}">10</th:block>건</b>의 목록이 있습니다.</span>
     </div>
     <div class="table01">
       <table>
@@ -154,8 +154,8 @@
       <div class="table_con">
         <table class="font">
           <tbody>
-          <th:block th:if="${user_list.size() > 0}">
-            <th:block th:each="item, index :${user_list}">
+          <th:block th:if="${user_mid_list.size() > 0}">
+            <th:block th:each="item, index :${user_mid_list}">
               <tr>
                 <td style="width:5%" th:text="${item.stat_dt}"></td>
                 <td style="width:5%" th:text="${item.user_order}"></td>

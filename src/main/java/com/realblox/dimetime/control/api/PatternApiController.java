@@ -32,18 +32,28 @@ import java.util.Map;
 public class PatternApiController {
     @Value("${excel.path}")
     private String excelPath = "";
+
+    @Value("${pattern.high}")
+    private String highYn = "";
+
+    @Value("${pattern.mid}")
+    private String midYn = "";
+
     @Autowired
     PatternService patternService;
 
     /**
-     * 엑셀읽기
+     * 이상패턴감지 분석 - 고위험군
      * @return
      */
-    @RequestMapping("/readCsv")
+    @RequestMapping("/analyzeAnomaly")
     @ResponseBody
-    public HashMap readCsv() {
+    public HashMap analyzeAnomaly() {
         HashMap retMap = new HashMap();
-        String line = "";
+        boolean resultHigh = false;
+        boolean resultMid = false;
+        String line;
+
         String today =  DateUtils.getDateToString("yyyy-MM-dd");
 
         try {
@@ -51,7 +61,6 @@ public class PatternApiController {
             Runtime runtime = Runtime.getRuntime();
             StringBuffer cmdResult = new StringBuffer();
 
-/*
             //main.py --------------------------------------------------------------- start
             process = runtime.exec(excelPath + "main.bat");
             process.waitFor();
@@ -64,9 +73,6 @@ public class PatternApiController {
             }
             log.info(cmdResult.toString());
             //main.py --------------------------------------------------------------- end
-
- */
-
 
             //kmeans.py ------------------------------------------------------------- start
             cmdResult = new StringBuffer();
@@ -82,10 +88,41 @@ public class PatternApiController {
             log.info(cmdResult.toString());
             //kmeans.py ------------------------------------------------------------- end
 
+            if(highYn.equals("Y")) {
+               resultHigh = highAnalyze(today);
+            }
+
+            if(midYn.equals("Y")) {
+                resultMid = midAnalyze(today);
+            }
+
+            retMap.put("resultHigh", resultHigh);
+            retMap.put("resultMid", resultMid);
+        } catch(Exception e) {
+            log.info(e.toString());
+        }
+
+        return retMap;
+    }
+
+
+
+    /**
+     * 이상패턴감지 분석 - 고위험군
+     * @return
+     */
+    public boolean highAnalyze(String today) {
+        boolean result;
+        String line = "";
+
+        try {
+            Process process;
+            Runtime runtime = Runtime.getRuntime();
+            StringBuffer cmdResult = new StringBuffer();
+
             //analyze_high.py ------------------------------------------------------------ start
             String analyzeResult1 = "";
             String[] splitAnalyzeResult1 = null;
-            cmdResult = new StringBuffer();
             process = runtime.exec(excelPath + "analyze_high.bat");
             process.waitFor();
             BufferedReader reader3=new BufferedReader(
@@ -95,13 +132,12 @@ public class PatternApiController {
             {
                 cmdResult.append(line);
             }
-            log.info(cmdResult.toString());
+
             analyzeResult1 = cmdResult.substring(cmdResult.indexOf("("), cmdResult.lastIndexOf(")")+1);
             splitAnalyzeResult1 = analyzeResult1.split("\\)");
 
-            log.info("---- 고위험군 순위 원본 ----");
+            log.info(cmdResult.toString());
             log.info(analyzeResult1);
-            log.info("---- 고위험군 순위 원본 Split ----");
 
             //금일 고위험군 데이터 삭제
             patternService.deleteHighRiskOrder(today);
@@ -117,43 +153,69 @@ public class PatternApiController {
 
                 RiskOrderVO riskOrderVO = new RiskOrderVO();
                 riskOrderVO.setUser_id(arrarRow[0]);
-                riskOrderVO.setUser_order( (order1++) + "");
+                riskOrderVO.setUser_order( (++order1) + "");
                 riskOrderVO.setStat_dt( today );
 
                 patternService.insertHighRiskOrder(riskOrderVO);
-//                log.info(arrarRow[0]);
-//                log.info(arrarRow[1]);
             }
             //analyze_high.py ------------------------------------------------------------ end
 
+            ExcelUtil excelUtil = new ExcelUtil();
+            List<RiskVO> list1 = excelUtil.readCsv(excelPath + "\\result\\high_risk_group.csv", today);
+
+            //기존 분석그룹 데이터 삭제
+            patternService.deleteHighAnomaly(today);
+
+            for(RiskVO riskVO:list1) {
+                patternService.insertHighAnomaly(riskVO);
+            }
+
+            result = true;
+        } catch(Exception e) {
+            log.info(e.toString());
+            result = false;
+        }
+
+        return result;
+    }
+
+
+    /**
+     * 이상패턴감지 분석 - 중간 위험군
+     * @return
+     */
+    public boolean midAnalyze(String today) {
+        boolean result;
+        String line = "";
+
+        try {
+            Process process;
+            Runtime runtime = Runtime.getRuntime();
+            StringBuffer cmdResult = new StringBuffer();
 
             //analyze_mid.py ------------------------------------------------------------ start
-            String analyzeResult2 = "";
-            String[] splitAnalyzeResult2 = null;
-            cmdResult = new StringBuffer();
+            String analyzeResult1 = "";
+            String[] splitAnalyzeResult1 = null;
             process = runtime.exec(excelPath + "analyze_mid.bat");
             process.waitFor();
-            BufferedReader reader4=new BufferedReader(
+            BufferedReader reader3=new BufferedReader(
                     new InputStreamReader(process.getInputStream())
             );
-            while((line = reader4.readLine()) != null)
+            while((line = reader3.readLine()) != null)
             {
                 cmdResult.append(line);
             }
+            analyzeResult1 = cmdResult.substring(cmdResult.indexOf("("), cmdResult.lastIndexOf(")")+1);
+            splitAnalyzeResult1 = analyzeResult1.split("\\)");
             log.info(cmdResult.toString());
-            analyzeResult2 = cmdResult.substring(cmdResult.indexOf("("), cmdResult.lastIndexOf(")")+1);
-            splitAnalyzeResult2 = analyzeResult2.split("\\)");
+            log.info(analyzeResult1);
 
-            log.info("---- 중간위험군 순위 원본 ----");
-            log.info(analyzeResult2);
-            log.info("---- 중간위험군 순위 원본 Split ----");
-
-            //금일 고위험군 데이터 삭제
+            //금일 중간위험군 데이터 삭제
             patternService.deleteMidRiskOrder(today);
 
-            int order2 = 0;
-            for(int i=0;i<splitAnalyzeResult2.length;i++) {
-                String row = splitAnalyzeResult2[i];
+            int order1 = 0;
+            for(int i=0;i<splitAnalyzeResult1.length;i++) {
+                String row = splitAnalyzeResult1[i];
                 String[] arrarRow = null;
                 row = row.replaceAll("\\(", "");
                 row = row.replaceAll("\\'", "");
@@ -162,35 +224,31 @@ public class PatternApiController {
 
                 RiskOrderVO riskOrderVO = new RiskOrderVO();
                 riskOrderVO.setUser_id(arrarRow[0]);
-                riskOrderVO.setUser_order( (order2++) + "");
+                riskOrderVO.setUser_order( (++order1) + "");
                 riskOrderVO.setStat_dt( today );
 
                 patternService.insertMidRiskOrder(riskOrderVO);
-//                log.info(arrarRow[0]);
-//                log.info(arrarRow[1]);
             }
             //analyze_mid.py ------------------------------------------------------------ end
 
 
             ExcelUtil excelUtil = new ExcelUtil();
-            List<RiskVO> list1 = excelUtil.readCsv(excelPath + "\\result\\high_risk_group.csv", today);
-            List<RiskVO> list2 = excelUtil.readCsv(excelPath + "\\result\\mid_risk_group.csv", today);
+            List<RiskVO> list1 = excelUtil.readCsv(excelPath + "\\result\\mid_risk_group.csv", today);
+
+            //기존 분석그룹 데이터 삭제
+            patternService.deleteMidAnomaly(today);
 
             for(RiskVO riskVO:list1) {
-                patternService.insertHighAnomaly(riskVO);
-            }
-
-            for(RiskVO riskVO:list2) {
                 patternService.insertMidAnomaly(riskVO);
             }
 
-            retMap.put("high_cnt", list1.size());
-            retMap.put("mid_cnt", list2.size());
+            result = true;
         } catch(Exception e) {
             log.info(e.toString());
+            result = false;
         }
 
-        return retMap;
+        return result;
     }
 
 

@@ -99,17 +99,29 @@
         )
     </insert>
 
+    <!-- High RISK 분석결과 삭제 -->
+    <delete id="deleteHighAnomaly" parameterType="String">
+        <![CDATA[/* High RISK 분석결과 분석결과 삭제 */]]>
+        delete from high_risk_group where stat_dt = #{stat_dt}
+    </delete>
+
+    <!-- Mid RISK 분석결과 삭제 -->
+    <delete id="deleteMidAnomaly" parameterType="String">
+        <![CDATA[/* Mid RISK 분석결과 분석결과 삭제 */]]>
+        delete from mid_risk_group where stat_dt = #{stat_dt}
+    </delete>
+
     <!-- 이상패턴감지 고위험군 분석결과 삭제 -->
-    <insert id="deleteHighRiskOrder" parameterType="String">
+    <delete id="deleteHighRiskOrder" parameterType="String">
         <![CDATA[/* 이상패턴감지 고위험군 분석결과 순위 등록 */]]>
         delete from high_risk_order where stat_dt = #{stat_dt}
-    </insert>
+    </delete>
 
     <!-- 이상패턴감지 중간위험군 분석결과 삭제 -->
-    <insert id="deleteHighRiskOrder" parameterType="String">
+    <delete id="deleteMidRiskOrder" parameterType="String">
         <![CDATA[/* 이상패턴감지 중간위험군 분석결과 순위 등록 */]]>
     delete from mid_risk_order where stat_dt = #{stat_dt}
-    </insert>
+    </delete>
 
     <!-- 이상패턴감지 중간위험군 분석결과 순위 등록 -->
     <insert id="insertMidRiskOrder" parameterType="RiskOrderVO">
