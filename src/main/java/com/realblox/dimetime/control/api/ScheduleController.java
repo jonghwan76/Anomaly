@@ -38,8 +38,27 @@ import java.util.Map;
 @EnableScheduling
 @Slf4j
 public class ScheduleController {
-    @Value("${excel.path}")
-    private String excelPath = "";
+    @Value("${excel.path1}")
+    private String excelUserDataPath = "";
+
+    @Value("${excel.path2}")
+    private String excelHighRiskGroup = "";
+
+    @Value("${excel.path3}")
+    private String excelMidRiskGroup = "";
+
+
+    @Value("${excel.command_main}")
+    private String commandMain = "";
+
+    @Value("${excel.command_kmeans}")
+    private String commandKmeans = "";
+
+    @Value("${excel.command_analyze_high}")
+    private String commandAnalyzeHigh = "";
+
+    @Value("${excel.command_analyze_mid}")
+    private String commandAnalyzeMid = "";
 
     @Value("${pattern.high}")
     private String highYn = "";
@@ -66,9 +85,9 @@ public class ScheduleController {
             if(schedule.equals("Y")) {
                 
                 //기존 집계파일 삭제 ------------------------------------------------------------------ 시작
-                File file1 = new File(excelPath + "\\result\\user_data.csv");
-                File file2 = new File(excelPath + "\\result\\high_risk_group.csv");
-                File file3 = new File(excelPath + "\\result\\mid_risk_group.csv");
+                File file1 = new File(excelUserDataPath);
+                File file2 = new File(excelHighRiskGroup);
+                File file3 = new File(excelMidRiskGroup);
 
                 if(file1.exists()) {
                     file1.delete();
@@ -86,7 +105,7 @@ public class ScheduleController {
                 StringBuffer cmdResult = new StringBuffer();
 
                 //main.py --------------------------------------------------------------- start
-                process = runtime.exec(excelPath + "main.bat");
+                process = runtime.exec(commandMain);
                 process.waitFor();
                 BufferedReader reader1=new BufferedReader(
                         new InputStreamReader(process.getInputStream())
@@ -100,7 +119,7 @@ public class ScheduleController {
 
                 //kmeans.py ------------------------------------------------------------- start
                 cmdResult = new StringBuffer();
-                process = runtime.exec(excelPath + "kmeans.bat");
+                process = runtime.exec(commandKmeans);
                 process.waitFor();
                 BufferedReader reader2=new BufferedReader(
                         new InputStreamReader(process.getInputStream())
@@ -112,7 +131,7 @@ public class ScheduleController {
                 log.info(cmdResult.toString());
                 //kmeans.py ------------------------------------------------------------- end
 
-                Path path = Paths.get(excelPath + "\\result\\user_data.csv");
+                Path path = Paths.get(excelUserDataPath);
                 if(highYn.equals("Y") && path.toFile().isFile()) {
                     resultHigh = highAnalyze(today);
                 }
@@ -149,7 +168,7 @@ public class ScheduleController {
             //analyze_high.py ------------------------------------------------------------ start
             String analyzeResult1 = "";
             String[] splitAnalyzeResult1 = null;
-            process = runtime.exec(excelPath + "analyze_high.bat");
+            process = runtime.exec(commandAnalyzeHigh);
             process.waitFor();
             BufferedReader reader3=new BufferedReader(
                     new InputStreamReader(process.getInputStream())
@@ -189,7 +208,7 @@ public class ScheduleController {
                 //analyze_high.py ------------------------------------------------------------ end
 
                 ExcelUtil excelUtil = new ExcelUtil();
-                List<RiskVO> list1 = excelUtil.readCsv(excelPath + "\\result\\high_risk_group.csv", today);
+                List<RiskVO> list1 = excelUtil.readCsv(excelHighRiskGroup, today);
 
                 //기존 분석그룹 데이터 삭제
                 patternService.deleteHighAnomaly(today);
@@ -225,7 +244,7 @@ public class ScheduleController {
             //analyze_mid.py ------------------------------------------------------------ start
             String analyzeResult1 = "";
             String[] splitAnalyzeResult1 = null;
-            process = runtime.exec(excelPath + "analyze_mid.bat");
+            process = runtime.exec(commandAnalyzeMid);
             process.waitFor();
             BufferedReader reader3=new BufferedReader(
                     new InputStreamReader(process.getInputStream())
@@ -265,7 +284,7 @@ public class ScheduleController {
 
 
                 ExcelUtil excelUtil = new ExcelUtil();
-                List<RiskVO> list1 = excelUtil.readCsv(excelPath + "\\result\\mid_risk_group.csv", today);
+                List<RiskVO> list1 = excelUtil.readCsv(excelMidRiskGroup, today);
 
                 //기존 분석그룹 데이터 삭제
                 patternService.deleteMidAnomaly(today);
