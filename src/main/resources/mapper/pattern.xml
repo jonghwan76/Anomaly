@@ -21,7 +21,7 @@
             and user_id = #{user_id}
         </if>
         <if test="startDate != null and startDate != '' and endDate != null and endDate != ''">
-            and a.reg_dt between STR_TO_DATE(#{startDate}, '%Y-%m-%d %H:%i:%s') and STR_TO_DATE(#{endDate}, '%Y-%m-%d %H:%i:%s')
+            and a.Timestamp between STR_TO_DATE(#{startDate}, '%Y-%m-%d %H:%i:%s') and STR_TO_DATE(#{endDate}, '%Y-%m-%d %H:%i:%s')
         </if>
         order by a.reg_dt
     </select>
