@@ -72,14 +72,29 @@ public class ScheduleController {
     @Autowired
     PatternService patternService;
 
-    @Scheduled(fixedDelay=1000 * 60 * 60 * 1)	//1시간 마다 실행
+
+    /**
+     * Cron식 스케줄러
+     * https://itworldyo.tistory.com/entry/%EC%8A%A4%ED%94%84%EB%A7%81%EB%B6%80%ED%8A%B8-%EC%8A%A4%EC%BC%80%EC%A4%84-%EC%84%A4%EC%A0%95-%EB%B2%95-Cron-%EC%A3%BC%EA%B8%B0%EC%84%A4%EC%A0%95
+     * 초 - 분 - 시 - 일 - 월 - 요일
+     * * * * * * //매초 실행
+     0 0 0/1 * * * //1시간마다 실행
+     0 0 7 * * * //매일 7시에 실행
+     */
+
+    /**
+     * 이상패턴감지 실행 - 1시간마다 실행
+     * 
+     */
+    @Scheduled(cron = "0 0 0/1 * * *") //매시간마다 실행
     public void scheduleAnomaly() {
 //        HashMap retMap = new HashMap();
         boolean resultHigh = false;
         boolean resultMid = false;
         String line;
 
-        String today =  DateUtils.getDateToString("yyyy-MM-dd");
+//        String today =  DateUtils.getDateToString("yyyy-MM-dd");
+        String today =  DateUtils.getDateToString("2023-09-22");
 
         try {
             if(schedule.equals("Y")) {
