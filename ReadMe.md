@@ -6,5 +6,5 @@ https://stackoverflow.com/questions/17309288/importerror-no-module-named-request
 https://servermon.tistory.com/392
 
 
-https://engineeringcode.tistory.com/134
-https://wonderhorn.net/programming/urllib3openssl.htmlㅊㅇ
+# openssl 오류 > CHAT-GPT
+https://chat.openai.com/c/bf3b1b6c-cfdd-466e-a370-7efad239a507
