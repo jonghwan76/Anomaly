@@ -86,7 +86,8 @@ public class ScheduleController {
      * 이상패턴감지 실행 - 1시간마다 실행
      * 
      */
-    @Scheduled(cron = "0 0 0/1 * * *") //매시간마다 실행
+//    @Scheduled(cron = "0 0 0/1 * * *") //매시간마다 실행
+//    @Scheduled(cron = "0 0 0 * * *")  //매일 자정에 실행
     public void scheduleAnomaly() {
 //        HashMap retMap = new HashMap();
         boolean resultHigh = false;
@@ -166,6 +167,21 @@ public class ScheduleController {
 
     }
 
+    /**
+     * 패턴정보조회
+     * @param patternSearchVO
+     * @return
+     */
+    @RequestMapping("/scheduleAnomalyTest")
+    @ResponseBody
+    public HashMap scheduleAnomalyTest(PatternSearchVO patternSearchVO) {
+        HashMap hashMap = new HashMap();
+        hashMap.put("result","200");
+        hashMap.put("msg","ok");
+        scheduleAnomaly();
+
+        return hashMap;
+    }
 
     /**
      * 이상패턴감지 분석 - 고위험군
